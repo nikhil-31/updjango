@@ -1,5 +1,6 @@
 # flake8: noqa
 from .settings import *
+from django.contrib.auth.models import User
 
 DEBUG = True
 ALLOWED_HOSTS += ['*']
@@ -23,7 +24,6 @@ DATABASES = {
         'OPTIONS': {'sslmode': 'require'},
     }
 }
-
 STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 AZURE_ACCOUNT_NAME = os.getenv('AZ_STORAGE_ACCOUNT_NAME')
 AZURE_CONTAINER = os.getenv('AZ_STORAGE_CONTAINER')
