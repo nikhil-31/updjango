@@ -1,6 +1,5 @@
 # flake8: noqa
 from .settings import *
-from django.contrib.auth.models import User
 
 DEBUG = True
 ALLOWED_HOSTS += ['*']
