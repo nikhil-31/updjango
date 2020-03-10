@@ -5,7 +5,7 @@ from .models import Merchant, Stores, Items
 class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
-        fields = ('name', 'owner')
+        fields = '__all__'
 
 
 class StoresSerializer(serializers.ModelSerializer):
