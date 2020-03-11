@@ -8,7 +8,7 @@ from .seralizers import MerchantSerializer, StoresSerializer, ItemsSerializer
 
 
 class MerchantView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
@@ -45,7 +45,7 @@ class MerchantView(APIView):
 
 
 class StoresView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
@@ -82,7 +82,7 @@ class StoresView(APIView):
 
 
 class ItemsView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
