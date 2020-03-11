@@ -1,126 +1,118 @@
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
 from .models import Merchant, Stores, Items
 from .seralizers import MerchantSerializer, StoresSerializer, ItemsSerializer
 
 
-@csrf_exempt
-def merchant_list(request):
-    if request.method == 'GET':
-        queryset = Merchant.objects.all()
-        serializer = MerchantSerializer(queryset, many=True)
-        return JsonResponse(serializer.data, safe=False)
+class MerchantView(APIView):
+    permission_classes = (AllowAny,)
 
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = MerchantSerializer(data=data)
+    def get(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            queryset = Merchant.objects.all()
+            serializer = MerchantSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            try:
+                merchant = Merchant.objects.get(pk=pk)
+            except Merchant.DoesNotExist:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            serializer = MerchantSerializer(merchant)
+            return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = MerchantSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response({"message": "merchant saved"}, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-
-@csrf_exempt
-def merchant_detail(request, pk):
-    try:
+    def put(self, request, pk, *args, **kwargs):
         merchant = Merchant.objects.get(pk=pk)
-    except Merchant.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = MerchantSerializer(merchant)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = MerchantSerializer(merchant, data=data)
+        serializer = MerchantSerializer(merchant, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, *args, **kwargs):
+        merchant = Merchant.objects.get(pk=pk)
         merchant.delete()
-        return HttpResponse(status=204)
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
-def stores_list(request):
-    if request.method == 'GET':
-        queryset = Stores.objects.all()
-        serializer = StoresSerializer(queryset, many=True)
-        return JsonResponse(serializer.data, safe=False)
+class StoresView(APIView):
+    permission_classes = (AllowAny,)
 
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = StoresSerializer(data=data)
+    def get(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            queryset = Stores.objects.all()
+            serializer = StoresSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            try:
+                store = Stores.objects.get(pk=pk)
+            except Stores.DoesNotExist:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            serializer = StoresSerializer(store)
+            return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = StoresSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response({"message": "Store saved"}, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-
-@csrf_exempt
-def stores_detail(request, pk):
-    try:
-        stores = Stores.objects.get(pk=pk)
-    except Stores.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = StoresSerializer(stores)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = StoresSerializer(stores, data=data)
+    def put(self, request, pk, *args, **kwargs):
+        store = Stores.objects.get(pk=pk)
+        serializer = StoresSerializer(store, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        stores.delete()
-        return HttpResponse(status=204)
+    def delete(self, request, pk, *args, **kwargs):
+        store = Stores.objects.get(pk=pk)
+        store.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
-def items_list(request):
-    if request.method == 'GET':
-        queryset = Items.objects.all()
-        serializer = ItemsSerializer(queryset, many=True)
-        return JsonResponse(serializer.data, safe=False)
+class ItemsView(APIView):
+    permission_classes = (AllowAny,)
 
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ItemsSerializer(data=data)
+    def get(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            queryset = Items.objects.all()
+            serializer = ItemsSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            try:
+                item = Items.objects.get(pk=pk)
+            except Items.DoesNotExist:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            serializer = ItemsSerializer(item)
+            return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ItemsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response({"message": "Item saved"}, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-
-@csrf_exempt
-def items_detail(request, pk):
-    try:
+    def put(self, request, pk, *args, **kwargs):
         item = Items.objects.get(pk=pk)
-    except Items.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = ItemsSerializer(item)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = ItemsSerializer(item, data=data)
+        serializer = ItemsSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, *args, **kwargs):
+        item = Items.objects.get(pk=pk)
         item.delete()
-        return HttpResponse(status=204)
+        return Response(status=HTTP_204_NO_CONTENT)
