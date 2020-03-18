@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from .models import Merchant, Stores, Items
+from .models import Merchant, Store, Item
 from .seralizers import MerchantSerializer, StoresSerializer, ItemsSerializer
 
 
@@ -31,8 +31,9 @@ class MerchantView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk, *args, **kwargs):
-        merchant = Merchant.objects.get(pk=pk)
-        serializer = MerchantSerializer(merchant, data=request.data)
+        mc = Merchant.objects.get(pk=pk)
+        items = Item.objects.filter(merchant=mc)
+        serializer = MerchantSerializer(mc, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -49,13 +50,13 @@ class StoresView(APIView):
 
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
-            queryset = Stores.objects.all()
+            queryset = Store.objects.all()
             serializer = StoresSerializer(queryset, many=True)
             return Response(serializer.data)
         else:
             try:
-                store = Stores.objects.get(pk=pk)
-            except Stores.DoesNotExist:
+                store = Store.objects.get(pk=pk)
+            except Store.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
             serializer = StoresSerializer(store)
             return Response(serializer.data)
@@ -68,7 +69,7 @@ class StoresView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk, *args, **kwargs):
-        store = Stores.objects.get(pk=pk)
+        store = Store.objects.get(pk=pk)
         serializer = StoresSerializer(store, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -76,7 +77,7 @@ class StoresView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
-        store = Stores.objects.get(pk=pk)
+        store = Store.objects.get(pk=pk)
         store.delete()
         return Response(status=HTTP_204_NO_CONTENT)
 
@@ -86,13 +87,13 @@ class ItemsView(APIView):
 
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
-            queryset = Items.objects.all()
+            queryset = Item.objects.all()
             serializer = ItemsSerializer(queryset, many=True)
             return Response(serializer.data)
         else:
             try:
-                item = Items.objects.get(pk=pk)
-            except Items.DoesNotExist:
+                item = Item.objects.get(pk=pk)
+            except Item.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
             serializer = ItemsSerializer(item)
             return Response(serializer.data)
@@ -105,7 +106,7 @@ class ItemsView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk, *args, **kwargs):
-        item = Items.objects.get(pk=pk)
+        item = Item.objects.get(pk=pk)
         serializer = ItemsSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -113,6 +114,6 @@ class ItemsView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
-        item = Items.objects.get(pk=pk)
+        item = Item.objects.get(pk=pk)
         item.delete()
         return Response(status=HTTP_204_NO_CONTENT)

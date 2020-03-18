@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Merchant, Stores, Items
+from .models import Merchant, Store, Item
 
 
 # Register your models here.
@@ -16,5 +16,5 @@ class ItemsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Merchant, MerchantAdmin)
-admin.site.register(Stores, StoresAdmin)
-admin.site.register(Items, ItemsAdmin)
+admin.site.register(Store, StoresAdmin)
+admin.site.register(Item, ItemsAdmin)
