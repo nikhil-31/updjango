@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from .models import Merchant, Store, Item
-from .seralizers import MerchantSerializer, StoresSerializer, ItemsSerializer
+from .models import Merchant, Store, Item, Order
+from .seralizers import MerchantSerializer, StoreSerializer, ItemsSerializer, OrderSerializer
 
 
 class MerchantView(APIView):
@@ -51,18 +51,18 @@ class StoresView(APIView):
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
             queryset = Store.objects.all()
-            serializer = StoresSerializer(queryset, many=True)
+            serializer = StoreSerializer(queryset, many=True)
             return Response(serializer.data)
         else:
             try:
                 store = Store.objects.get(pk=pk)
             except Store.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
-            serializer = StoresSerializer(store)
+            serializer = StoreSerializer(store)
             return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        serializer = StoresSerializer(data=request.data)
+        serializer = StoreSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Store saved"}, status=HTTP_201_CREATED)
@@ -70,7 +70,7 @@ class StoresView(APIView):
 
     def put(self, request, pk, *args, **kwargs):
         store = Store.objects.get(pk=pk)
-        serializer = StoresSerializer(store, data=request.data)
+        serializer = StoreSerializer(store, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -117,3 +117,27 @@ class ItemsView(APIView):
         item = Item.objects.get(pk=pk)
         item.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class OrderView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            queryset = Order.objects.all()
+            serializer = OrderSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            try:
+                order = Order.objects.get(pk=pk)
+            except Order.DoesNotExist:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            serializer = OrderSerializer(order)
+            return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("The Order was placed")
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

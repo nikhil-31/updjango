@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Merchant, Store, Item
+from .models import Merchant, Store, Item, Order
 
 
 # Register your models here.
@@ -15,6 +15,11 @@ class ItemsAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'description', 'merchant')
 
 
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('')
+
+
+admin.site.register(Order)
 admin.site.register(Merchant, MerchantAdmin)
 admin.site.register(Store, StoresAdmin)
 admin.site.register(Item, ItemsAdmin)

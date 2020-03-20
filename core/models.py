@@ -1,5 +1,12 @@
-from django.db import models
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
+from django.db import models
+
+
+def delivery_time():
+    now = datetime.now()
+    return now + timedelta(minutes=45)
 
 
 # Merchant model, each merchant has an owner which is the user
@@ -32,3 +39,15 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Order(models.Model):
+    address = models.CharField(max_length=1000)
+    merchant = models.ForeignKey(Merchant, default=None, on_delete=models.SET_DEFAULT)
+    store = models.ForeignKey(Store, default=None, on_delete=models.SET_DEFAULT)
+    items = models.ManyToManyField(Item, related_name="order_items")
+    order_subtotal = models.FloatField()
+    taxes = models.FloatField()
+    order_total = models.FloatField()
+    created_time = models.DateTimeField(auto_now_add=True)
+    delivery_time = models.DateTimeField(default=delivery_time())
