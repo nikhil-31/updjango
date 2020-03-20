@@ -139,5 +139,5 @@ class OrderView(APIView):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response("The Order was placed")
+            return Response({"message": "Order placed successfully"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
