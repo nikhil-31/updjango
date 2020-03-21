@@ -6,6 +6,9 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_2
 from .models import Merchant, Store, Item, Order
 from .seralizers import MerchantSerializer, StoreSerializer, ItemsSerializer, OrderSerializer
 from .tasks import save_orders
+import structlog
+
+logger = structlog.getLogger(__name__)
 
 
 class MerchantView(APIView):
@@ -15,6 +18,7 @@ class MerchantView(APIView):
         if pk is None:
             queryset = Merchant.objects.all()
             serializer = MerchantSerializer(queryset, many=True)
+            logger.info("merchant_get", all_items=True, request_data=request.data)
             return Response(serializer.data)
         else:
             try:
@@ -22,12 +26,14 @@ class MerchantView(APIView):
             except Merchant.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
             serializer = MerchantSerializer(merchant)
+            logger.info("merchant_get", all_items=False, merchant_id=merchant.id, request_data=request.data)
             return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         serializer = MerchantSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("merchant_save", request_data=request.data)
             return Response({"message": "merchant saved"}, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -37,12 +43,14 @@ class MerchantView(APIView):
         serializer = MerchantSerializer(mc, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("merchant_edit", request_data=request.data)
             return Response(serializer.data)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
         merchant = Merchant.objects.get(pk=pk)
         merchant.delete()
+        logger.info("merchant_delete", request_data=request.data)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
@@ -53,12 +61,14 @@ class StoresView(APIView):
         if pk is None:
             queryset = Store.objects.all()
             serializer = StoreSerializer(queryset, many=True)
+            logger.info("store_get", all_items=True, request_data=request.data)
             return Response(serializer.data)
         else:
             try:
                 store = Store.objects.get(pk=pk)
             except Store.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
+            logger.info("store_detail", all_items=False, store_id=store.id, request_data=request.data)
             serializer = StoreSerializer(store)
             return Response(serializer.data)
 
@@ -66,6 +76,7 @@ class StoresView(APIView):
         serializer = StoreSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("store_save", request_data=request.data)
             return Response({"message": "Store saved"}, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -74,12 +85,14 @@ class StoresView(APIView):
         serializer = StoreSerializer(store, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("store_edit", request_data=request.data)
             return Response(serializer.data)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
         store = Store.objects.get(pk=pk)
         store.delete()
+        logger.info("store_delete", request_data=request.data)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
@@ -90,12 +103,14 @@ class ItemsView(APIView):
         if pk is None:
             queryset = Item.objects.all()
             serializer = ItemsSerializer(queryset, many=True)
+            logger.info("item_get", all_items=True, request_data=request.data)
             return Response(serializer.data)
         else:
             try:
                 item = Item.objects.get(pk=pk)
             except Item.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
+            logger.info("item_get", all_items=False, request_data=request.data)
             serializer = ItemsSerializer(item)
             return Response(serializer.data)
 
@@ -103,6 +118,7 @@ class ItemsView(APIView):
         serializer = ItemsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("item_save", request_data=request.data)
             return Response({"message": "Item saved"}, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -111,12 +127,14 @@ class ItemsView(APIView):
         serializer = ItemsSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("item_edit", request_data=request.data)
             return Response(serializer.data)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
         item = Item.objects.get(pk=pk)
         item.delete()
+        logger.info("item_delete", request_data=request.data)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
@@ -127,6 +145,7 @@ class OrderView(APIView):
         if pk is None:
             queryset = Order.objects.all()
             serializer = OrderSerializer(queryset, many=True)
+            logger.info("order_get", all_items=True)
             return Response(serializer.data)
         else:
             try:
@@ -134,6 +153,7 @@ class OrderView(APIView):
             except Order.DoesNotExist:
                 return Response(status=HTTP_400_BAD_REQUEST)
             serializer = OrderSerializer(order)
+            logger.info("order_get", all_items=False, order_id=order.id)
             return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -142,5 +162,6 @@ class OrderView(APIView):
             # serializer.save()
             # Saving orders in the bg using celery
             save_orders(request.data)
+            logger.info("order_saved", payload=request.data)
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

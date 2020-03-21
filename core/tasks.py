@@ -1,6 +1,9 @@
 from celery import shared_task
+import structlog
 
 from .models import Merchant, Store, Order, Item
+
+logger = structlog.getLogger(__name__)
 
 
 @shared_task
@@ -31,6 +34,8 @@ def save_orders(validated_data):
         for item in items:
             order.items.add(item['id'])
             print(item['id'])
+
+        logger.info("Saving Order ", order_payload=validated_data, order_obj=str(order))
         return "Task completed successfully"
     except Exception as e:
         return str(e)
