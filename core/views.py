@@ -5,6 +5,7 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_2
 
 from .models import Merchant, Store, Item, Order
 from .seralizers import MerchantSerializer, StoreSerializer, ItemsSerializer, OrderSerializer
+from .tasks import save_orders
 
 
 class MerchantView(APIView):
@@ -138,6 +139,8 @@ class OrderView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Order placed successfully"})
+            # serializer.save()
+            # Saving orders in the bg using celery
+            save_orders(request.data)
+            return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
