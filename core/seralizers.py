@@ -38,6 +38,31 @@ class StoreSerializer(serializers.ModelSerializer):
             },
         }
 
+    def validate(self, attrs):
+        merchant_attr = attrs['merchant']
+        merchant_id = merchant_attr['id']
+
+        try:
+            merchant = Merchant.objects.get(pk=merchant_id)
+        except Merchant.DoesNotExist:
+            raise serializers.ValidationError("Merchant does not exist")
+        return attrs
+
+    def create(self, validated_data):
+        merchant_data = validated_data.pop('merchant')
+        merchant_id = merchant_data['id']
+        merchant = Merchant.objects.get(pk=merchant_id)
+
+        name = validated_data['name']
+        address = validated_data['address']
+        lat = validated_data['lat']
+        lng = validated_data['lng']
+
+        store = Store(merchant=merchant, name=name, address=address, lat=lat, lng=lng)
+        store.save()
+
+        return validated_data
+
 
 class ItemsSerializer(serializers.ModelSerializer):
     merchant = MerchantSerializer()
@@ -57,6 +82,30 @@ class ItemsSerializer(serializers.ModelSerializer):
                 "required": False,
             },
         }
+
+    def validate(self, attrs):
+        merchant_attr = attrs['merchant']
+        merchant_id = merchant_attr['id']
+
+        try:
+            merchant = Merchant.objects.get(pk=merchant_id)
+        except Merchant.DoesNotExist:
+            raise serializers.ValidationError("Merchant does not exist")
+        return attrs
+
+    def create(self, validated_data):
+        merchant_data = validated_data.pop('merchant')
+        merchant_id = merchant_data['id']
+        merchant = Merchant.objects.get(pk=merchant_id)
+
+        name = validated_data['name']
+        price = validated_data['price']
+        description = validated_data['description']
+
+        item = Item(merchant=merchant, name=name, price=price, description=description)
+        item.save()
+
+        return validated_data
 
 
 class OrderSerializer(serializers.ModelSerializer):
