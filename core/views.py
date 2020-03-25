@@ -161,7 +161,7 @@ class OrderView(APIView):
         if serializer.is_valid():
             # serializer.save()
             # Saving orders in the bg using celery
-            save_orders(request.data)
+            save_orders.delay(request.data)
             logger.info("order_saved", payload=request.data)
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
