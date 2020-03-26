@@ -22,6 +22,11 @@ class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
+    def get_queryset(self):
+        queryset = Item.objects.all()
+        queryset = queryset.select_related('merchant')
+        return queryset
+
 
 class ItemViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
@@ -48,3 +53,10 @@ class OrderViewSet(viewsets.ModelViewSet):
             logger.info("order_saved", payload=request.data)
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        queryset = Order.objects.all()
+        queryset = queryset.select_related('merchant')
+        queryset = queryset.select_related('store')
+        queryset = queryset.prefetch_related('items')
+        return queryset
