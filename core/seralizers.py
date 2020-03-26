@@ -49,7 +49,7 @@ class StoreSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        merchant_data = validated_data.pop('merchant')
+        merchant_data = validated_data['merchant']
         merchant_id = merchant_data['id']
         merchant = Merchant.objects.get(pk=merchant_id)
 
@@ -94,7 +94,7 @@ class ItemsSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        merchant_data = validated_data.pop('merchant')
+        merchant_data = validated_data['merchant']
         merchant_id = merchant_data['id']
         merchant = Merchant.objects.get(pk=merchant_id)
 

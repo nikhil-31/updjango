@@ -1,13 +1,14 @@
-from django.urls import path
-from core.views import MerchantView, StoresView, ItemsView, OrderView
+from django.urls import path, include
+from core.views import MerchantViewSet, StoreViewSet, ItemViewSet, OrderViewSet
+
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('merchants', MerchantViewSet)
+router.register('stores', StoreViewSet)
+router.register('items', ItemViewSet)
+router.register('orders', OrderViewSet)
 
 urlpatterns = [
-    path('api/merchants/', MerchantView.as_view(), name='merchant-list'),
-    path('api/merchants/<int:pk>/', MerchantView.as_view(), name='merchant-detail'),
-    path('api/stores/', StoresView.as_view(), name='stores-list'),
-    path('api/stores/<int:pk>/', StoresView.as_view(), name='stores-detail'),
-    path('api/items/', ItemsView.as_view(), name='items-list'),
-    path('api/items/<int:pk>/', ItemsView.as_view(), name='items-detail'),
-    path('api/orders/', OrderView.as_view(), name='order-list'),
-    path('api/orders/<int:pk>/', OrderView.as_view(), name='order-detail')
+    path('api/', include(router.urls)),
 ]
