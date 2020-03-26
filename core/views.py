@@ -17,7 +17,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     serializer_class = MerchantSerializer
 
     def get_queryset(self):
-        queryset = Merchant.objects.all()
+        queryset = Merchant.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('owner')
         return queryset
 
@@ -28,7 +28,7 @@ class StoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
 
     def get_queryset(self):
-        queryset = Item.objects.all()
+        queryset = Item.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('merchant')
         return queryset
 
@@ -39,7 +39,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemsSerializer
 
     def get_queryset(self):
-        queryset = Item.objects.all()
+        queryset = Item.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('merchant')
         return queryset
 
@@ -60,7 +60,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
-        queryset = Order.objects.all()
+        queryset = Order.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('merchant')
         queryset = queryset.select_related('store')
         queryset = queryset.prefetch_related('items')
