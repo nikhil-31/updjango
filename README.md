@@ -10,6 +10,7 @@ So, what are we building?
 • A simple transactional system
 
 • Comprises of:
+ - Merchants (name)
  - Items (name, price, description)
  - Stores (name, address, lat, lng)
 
@@ -26,11 +27,13 @@ Steps:
 1. **Clone the project** and change directory into the cloned folder
 2. **Install pyenv** [link](https://github.com/pyenv/pyenv#homebrew-on-macos) .This will seperate your system's python installation, from what's required by the project. This project required python version `3.6.5`. 
       * Install python version 3.6.5 in pyenv and set it as the local python env
-3. **Install mysqlv5.7** This project uses mysql `5.7`, follow the steps below after installation,
+3. **Install mysqlv5.7** This project uses mysql `5.7`, follow the steps below after installating mysql,
       * `mysql_config` must be installed, if this is not installed the next step will fail
       ```sudo apt-get install libmysqlclient-dev```[link to stackoverflow](https://stackoverflow.com/questions/7475223/mysql-config-not-found-when-installing-mysqldb-python-interface)
-      * Create a database called updjango_db
-      * Create a new user and grant all the permissions to this db and configure the username and password in `settings.py`
+      * Create a database called updjango_db in mysql using the mqsql admin
+      * In mysql-admin, create a new user and grant all the permissions to this db and configure the username and password in `settings.py`
+      * Make migrations using `./manage.py makemigrations`, this will generate the migrations
+      * Migrate using `./manage.py migrate`, this will apply the migrations to the database
 4. **Create a virtual env** and Install the dependencies in the requirements.txt file
 5. **Installing rabbitmq** Install the latest version of rabbitmq
       * Rabbitmq depends on erlang and might throw an error during installations because of an incompatable versions. 
