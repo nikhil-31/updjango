@@ -28,6 +28,11 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemsSerializer
 
+    def get_queryset(self):
+        queryset = Item.objects.all()
+        queryset = queryset.select_related('merchant')
+        return queryset
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
