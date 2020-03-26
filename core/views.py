@@ -16,6 +16,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
     queryset = Merchant.objects.all()
     serializer_class = MerchantSerializer
 
+    def get_queryset(self):
+        queryset = Merchant.objects.all()
+        queryset = queryset.select_related('owner')
+        return queryset
+
 
 class StoreViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
