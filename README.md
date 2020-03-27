@@ -32,9 +32,9 @@ Steps:
       ```sudo apt-get install libmysqlclient-dev```[link to stackoverflow](https://stackoverflow.com/questions/7475223/mysql-config-not-found-when-installing-mysqldb-python-interface)
       * Create a database called updjango_db in mysql using the mqsql admin
       * In mysql-admin, create a new user and grant all the permissions to this db and configure the username and password in `settings.py`
+4. **Create a virtual env** and Install the dependencies in the requirements.txt file
       * Make migrations using `./manage.py makemigrations`, this will generate the migrations
       * Migrate using `./manage.py migrate`, this will apply the migrations to the database
-4. **Create a virtual env** and Install the dependencies in the requirements.txt file
 5. **Installing rabbitmq** Install the latest version of rabbitmq
       * Rabbitmq depends on erlang and might throw an error during installations because of an incompatable versions. 
       This stackoverflow link to install the correct version of erlang helps [link](https://stackoverflow.com/questions/44685813/how-do-i-install-a-specific-version-of-erlang)
