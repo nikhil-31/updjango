@@ -1,4 +1,6 @@
 import os
+from datetime import timedelta
+
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
@@ -99,3 +101,8 @@ REST_FRAMEWORK = {
 
 # Celery url
 CELERY_BROKER_URL = 'amqp://localhost'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+}
