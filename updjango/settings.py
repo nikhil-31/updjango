@@ -63,8 +63,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "updjango_db",
-        "USER": "nikhil",
-        "PASSWORD": "nikhil",
+        "USER": "updb",
+        "PASSWORD": "gDKQkA5Ysn8h%^iin%",
         "HOST": "localhost",
         "PORT": 3306
     }
