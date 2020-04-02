@@ -1,11 +1,19 @@
 import os
 from datetime import timedelta
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env()
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-DEBUG = False
+DEBUG = env('DEBUG')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
+SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = ["13.127.81.33",
                  "127.0.0.1",
                  "116.203.137.67", ]
@@ -64,25 +72,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "updjango_db",
-        "USER": "updb",
-        "PASSWORD": "gDKQkA5Ysn8h%^iin%",
-        "HOST": "localhost",
+        "NAME": env('MYSQL_DATABASE_NAME'),
+        "USER": env('MYSQL_DATABASE_USER'),
+        "PASSWORD": env('MYSQL_DATABASE_PASSWORD'),
+        "HOST": env('MYSQL_HOST_NAME'),
         "PORT": 3306
     }
 }
 
-if ENVIRONMENT == 'production':
-    DEBUG = False
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    SESSION_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# if ENVIRONMENT == 'production':
+#     DEBUG = False
+#     SECRET_KEY = os.getenv('SECRET_KEY')
+#     SESSION_COOKIE_SECURE = True
+#     SECURE_BROWSER_XSS_FILTER = True
+#     SECURE_CONTENT_TYPE_NOSNIFF = True
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_SECONDS = 31536000
+#     SECURE_REDIRECT_EXEMPT = []
+#     SECURE_SSL_REDIRECT = True
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Django Rest framework
 REST_FRAMEWORK = {
