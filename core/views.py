@@ -59,9 +59,9 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    def get_queryset(self):
-        queryset = Order.objects.get_queryset().order_by('id')
-        queryset = queryset.select_related('merchant')
-        queryset = queryset.select_related('store')
-        queryset = queryset.prefetch_related('items')
-        return queryset
+    # def get_queryset(self):
+    #     queryset = Order.objects.get_queryset().order_by('id')
+    #     queryset = queryset.select_related('merchant')
+    #     queryset = queryset.select_related('store')
+    #     queryset = queryset.prefetch_related('items')
+    #     return queryset
