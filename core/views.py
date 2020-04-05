@@ -39,20 +39,18 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemsSerializer
 
     def get_queryset(self):
-        queryset = Item.objects.get_queryset().order_by('id')
-        queryset = queryset.select_related('merchant')
-        return queryset
-
-
-class ItemSearchViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    queryset = Item.objects.all()
-    serializer_class = ItemsSerializer
-
-    def get_queryset(self):
-        name = self.request.query_params.get('name')
-        queryset = Item.objects.filter(name__contains=name)
-        return queryset
+        if self.request.query_params.get('merchant_id') is not None:
+            merchant_id = self.request.query_params.get('merchant_id')
+            queryset = Item.objects.filter(merchant=merchant_id).order_by('id')
+            return queryset
+        elif self.request.query_params.get('q') is not None:
+            name = self.request.query_params.get('q')
+            queryset = Item.objects.filter(name__icontains=name).order_by('id')
+            return queryset
+        else:
+            queryset = Item.objects.get_queryset().order_by('id')
+            queryset = queryset.select_related('merchant')
+            return queryset
 
 
 class OrderViewSet(viewsets.ModelViewSet):
