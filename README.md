@@ -272,6 +272,12 @@ response status - 204 no content
 
 URL - `/api/items/` - Returns a list of all items
 
+Query Params 
+
+`merchant_id` - Returns a list of all the items for a particular merchant
+
+`q` - Search items by name, returns a list
+
 
 response body 
 ```json
