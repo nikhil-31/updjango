@@ -44,6 +44,17 @@ class ItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class ItemSearchViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Item.objects.all()
+    serializer_class = ItemsSerializer
+
+    def get_queryset(self):
+        name = self.request.query_params.get('name')
+        queryset = Item.objects.filter(name=name)
+        return queryset
+
+
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Order.objects.all()
