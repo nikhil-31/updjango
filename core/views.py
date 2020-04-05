@@ -51,7 +51,7 @@ class ItemSearchViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         name = self.request.query_params.get('name')
-        queryset = Item.objects.filter(name=name)
+        queryset = Item.objects.filter(name__contains=name)
         return queryset
 
 
@@ -63,8 +63,6 @@ class OrderViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
-            # serializer.save()
-            # Saving orders in the bg using celery
             save_orders.delay(request.data)
             logger.info("order_saved", payload=request.data)
             return Response({"message": "Order Queued"})
