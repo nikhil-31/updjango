@@ -31,9 +31,14 @@ def save_orders(validated_data):
                       taxes=taxes, order_total=order_total)
         order.save()
 
-        for item in items:
-            order.items.add(item['id'])
-            print(item['id'])
+        item_list = [item['id'] for item in items]
+        logger.info("item list" + str(item_list))
+
+        order.items.add(*item_list)
+
+        # for item in items:
+        #     order.items.add(item['id'])
+        #     print(item['id'])
 
         logger.info("Saving Order ", order_payload=validated_data, order_obj=str(order))
         return "Task completed successfully"

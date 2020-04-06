@@ -129,8 +129,6 @@ class OrderSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        print(attrs)
-
         store_attr = attrs['store']
         merchant_attr = attrs['merchant']
         items_attr = attrs['items']
