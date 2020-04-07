@@ -8,6 +8,7 @@ from .models import Merchant, Store, Item, Order
 from .seralizers import MerchantSerializer, StoreSerializer, ItemsSerializer, OrderSerializer
 from .tasks import save_orders
 
+structlog.configure(processors=[structlog.processors.JSONRenderer()])
 logger = structlog.getLogger(__name__)
 
 
@@ -21,6 +22,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
         queryset = queryset.select_related('owner')
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        resp = super(MerchantViewSet, self).create(request)
+        logger.msg("merchant_created", payload=request.data)
+        return resp
+
 
 class StoreViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
@@ -31,6 +37,11 @@ class StoreViewSet(viewsets.ModelViewSet):
         queryset = Item.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('merchant')
         return queryset
+
+    def create(self, request, *args, **kwargs):
+        resp = super(StoreViewSet, self).create(request)
+        logger.msg("store_created", payload=request.data)
+        return resp
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -52,6 +63,11 @@ class ItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.select_related('merchant')
             return queryset
 
+    def create(self, request, *args, **kwargs):
+        resp = super(ItemViewSet, self).create(request)
+        logger.msg("item_created", payload=request.data)
+        return resp
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
@@ -62,7 +78,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             save_orders.delay(request.data)
-            logger.info("order_saved", payload=request.data)
+            logger.msg("order_created", payload=request.data)
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
