@@ -78,6 +78,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             save_orders.delay(request.data)
+            # save_orders.apply_async(args=[request.data], countdown=5)
             logger.msg("order_created", payload=request.data)
             return Response({"message": "Order Queued"})
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

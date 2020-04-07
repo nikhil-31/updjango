@@ -32,15 +32,14 @@ def save_orders(validated_data):
         order.save()
 
         item_list = [item['id'] for item in items]
-        logger.info("item list" + str(item_list))
-
         order.items.add(*item_list)
-
-        # for item in items:
-        #     order.items.add(item['id'])
-        #     print(item['id'])
 
         logger.info("Saving Order ", order_payload=validated_data, order_obj=str(order))
         return "Task completed successfully"
     except Exception as e:
         return str(e)
+
+
+@shared_task()
+def delayed_task():
+    return "Task runs after delays"
