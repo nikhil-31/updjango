@@ -63,6 +63,24 @@ class StoreSerializer(serializers.ModelSerializer):
 
         return validated_data
 
+    def update(self, instance, validated_data):
+        merchant_data = validated_data['merchant']
+        merchant_id = merchant_data['id']
+        merchant = Merchant.objects.get(pk=merchant_id)
+
+        name = validated_data['name']
+        address = validated_data['address']
+        lat = validated_data['lat']
+        lng = validated_data['lng']
+
+        instance.name = name
+        instance.address = address
+        instance.merchant = merchant
+        instance.lat = lat
+        instance.lng = lng
+        instance.save()
+        return instance
+
 
 class ItemsSerializer(serializers.ModelSerializer):
     merchant = MerchantSerializer()
@@ -107,6 +125,23 @@ class ItemsSerializer(serializers.ModelSerializer):
 
         return validated_data
 
+    def update(self, instance, validated_data):
+        merchant_data = validated_data['merchant']
+        merchant_id = merchant_data['id']
+        merchant = Merchant.objects.get(pk=merchant_id)
+
+        name = validated_data['name']
+        price = validated_data['price']
+        description = validated_data['description']
+
+        instance.merchant = merchant
+        instance.name = name
+        instance.price = price
+        instance.description = description
+        instance.save()
+
+        return instance
+
 
 class OrderSerializer(serializers.ModelSerializer):
     store = StoreSerializer()
@@ -129,39 +164,39 @@ class OrderSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        store_attr = attrs['store']
-        merchant_attr = attrs['merchant']
-        items_attr = attrs['items']
-
-        store_id = store_attr['id']
-        merchant_id = merchant_attr['id']
-
-        address = attrs['address']
-        order_subtotal = attrs['order_subtotal']
-        taxes = attrs['taxes']
-        order_total = attrs['order_total']
-
-        try:
-            merchant = Merchant.objects.get(pk=merchant_id)
-        except Merchant.DoesNotExist:
-            raise serializers.ValidationError("Merchant does not exist")
-
-        try:
-            store = Store.objects.get(pk=store_id)
-        except Store.DoesNotExist:
-            raise serializers.ValidationError("Store does not exist")
-
-        for item in items_attr:
-            try:
-                item = Item.objects.get(pk=item['id'])
-            except Item.DoesNotExist:
-                raise serializers.ValidationError("Invalid items passed")
-
-            if merchant != item.merchant:
-                raise serializers.ValidationError(f"{item.name} not associated with merchant")
-
-        if merchant != store.merchant:
-            raise serializers.ValidationError("Store is not associated with the merchant")
+        # store_attr = attrs['store']
+        # merchant_attr = attrs['merchant']
+        # items_attr = attrs['items']
+        #
+        # store_id = store_attr['id']
+        # merchant_id = merchant_attr['id']
+        #
+        # address = attrs['address']
+        # order_subtotal = attrs['order_subtotal']
+        # taxes = attrs['taxes']
+        # order_total = attrs['order_total']
+        #
+        # try:
+        #     merchant = Merchant.objects.get(pk=merchant_id)
+        # except Merchant.DoesNotExist:
+        #     raise serializers.ValidationError("Merchant does not exist")
+        #
+        # try:
+        #     store = Store.objects.get(pk=store_id)
+        # except Store.DoesNotExist:
+        #     raise serializers.ValidationError("Store does not exist")
+        #
+        # for item in items_attr:
+        #     try:
+        #         item = Item.objects.get(pk=item['id'])
+        #     except Item.DoesNotExist:
+        #         raise serializers.ValidationError("Invalid items passed")
+        #
+        #     if merchant != item.merchant:
+        #         raise serializers.ValidationError(f"{item.name} not associated with merchant")
+        #
+        # if merchant != store.merchant:
+        #     raise serializers.ValidationError("Store is not associated with the merchant")
 
         return attrs
 

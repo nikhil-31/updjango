@@ -34,7 +34,7 @@ class StoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
 
     def get_queryset(self):
-        queryset = Item.objects.get_queryset().order_by('id')
+        queryset = Store.objects.get_queryset().order_by('id')
         queryset = queryset.select_related('merchant')
         return queryset
 

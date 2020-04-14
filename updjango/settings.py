@@ -12,6 +12,7 @@ environ.Env.read_env()
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = env('DEBUG')
+SILK_ENABLED = env('SILK_ENABLED')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = ["13.127.81.33",
@@ -76,26 +77,17 @@ DATABASES = {
         "USER": env('MYSQL_DATABASE_USER'),
         "PASSWORD": env('MYSQL_DATABASE_PASSWORD'),
         "HOST": env('MYSQL_HOST_NAME'),
-        "PORT": 3306
+        "PORT": 3306,
+        "TEST": {
+            "NAME": 'updjango_test',
+        }
     }
 }
 
-# if ENVIRONMENT == 'production':
-#     DEBUG = False
-#     SECRET_KEY = os.getenv('SECRET_KEY')
-#     SESSION_COOKIE_SECURE = True
-#     SECURE_BROWSER_XSS_FILTER = True
-#     SECURE_CONTENT_TYPE_NOSNIFF = True
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#     SECURE_HSTS_SECONDS = 31536000
-#     SECURE_REDIRECT_EXEMPT = []
-#     SECURE_SSL_REDIRECT = True
-#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-if DEBUG:
-    MIDDLEWARE += ['silk.middleware.SilkyMiddleware',]
+# Silk Profiler
+if SILK_ENABLED:
+    MIDDLEWARE += ['silk.middleware.SilkyMiddleware', ]
     INSTALLED_APPS += ['silk']
-
 
 # Django Rest framework
 REST_FRAMEWORK = {
@@ -115,6 +107,7 @@ REST_FRAMEWORK = {
 # Celery broker URL
 CELERY_BROKER_URL = 'amqp://localhost'
 
+# JWT token config
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),

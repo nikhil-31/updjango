@@ -7,10 +7,11 @@ media
 *.env
 .python-version
 /venv
+/.pytest_cache
+/updjango/.env
+/.vscode
+./.idea
 
 # Accept these files in the repository
 !.gitignore
 !.travis.yml
-/updjango/.env
-/.vscode
-./.idea
