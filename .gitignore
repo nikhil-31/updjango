@@ -11,6 +11,7 @@ media
 /updjango/.env
 /.vscode
 ./.idea
+.idea
 
 # Accept these files in the repository
 !.gitignore
