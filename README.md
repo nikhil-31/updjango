@@ -1,6 +1,6 @@
 ## Backend onboarding project
 
-A simple Order/ Transaction management system.
+### A simple Order/ Transaction management system.
 
 Purpose — to introduce and familiarise you to the basic tenets of a highly
 scalable, web-based application (from the POV of UrbanPiper :)) 
