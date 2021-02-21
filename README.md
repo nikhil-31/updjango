@@ -47,7 +47,7 @@ Steps:
 This project uses JWT for authentication, all requests other than login and request token must contain 
 The header `Authorization`:`Bearer TOKEN_FROM_REFRESH_TOKEN_RESPONSE`
 
-### Login - Get the JWT token
+## Login - Get the JWT token
 
 URL - `/api/token/`
 
@@ -72,7 +72,7 @@ response body
 ```
 
 
-### Refresh token 
+## Refresh token 
 
 URL - `/api/token/refresh/`
 
@@ -93,7 +93,7 @@ response body
 
 ```
 
-### Merchant
+## Merchant
 
 #### GET
 
@@ -164,7 +164,7 @@ URL - `/api/merchants/<int:pk>/` - delete a merchant
 response status - 204 no content
 
 
-### Store
+## Store
 #### GET
 
 URL - `/api/stores/` - Returns a list of all stores
@@ -212,19 +212,18 @@ URL - `/api/stores/` - Add a new store
 
 request body 
 ```json
-{
-   {		
-     "name": "Cunningham Road",
-     "address": "Super, cunning",
-     "lat": 45.9699,
-     "lng": 24.7319,
-     "merchant": {
-        "id": 1,
-        "name": "Chai Point",
-        "owner": 1
-     }
+{		
+   "name": "Cunningham Road",
+   "address": "Super, cunning",
+   "lat": 45.9699,
+   "lng": 24.7319,
+   "merchant": {
+      "id": 1,
+      "name": "Chai Point",
+      "owner": 1
    }
 }
+
 ```
 
 response body
@@ -239,19 +238,19 @@ URL - `/api/merchants/<int:pk>/` - Edit a Store
 
 request body 
 ```json
-{
-   {		
-     "name": "Cunningham Road",
-     "address": "Super, cunning",
-     "lat": 45.9699,
-     "lng": 24.7319,
-     "merchant": {
-        "id": 1,
-        "name": "Chai Point",
-        "owner": 1
-     }
+
+{		
+   "name": "Cunningham Road",
+   "address": "Super, cunning",
+   "lat": 45.9699,
+   "lng": 24.7319,
+   "merchant": {
+      "id": 1,
+      "name": "Chai Point",
+      "owner": 1
    }
 }
+
 ```
 
 response body
@@ -266,7 +265,7 @@ URL - `/api/stores/<int:pk>/` - delete a store
 response status - 204 no content
 
 
-### Item
+## Item
 
 #### GET
 
@@ -367,7 +366,7 @@ URL - `/api/items/<int:pk>/` - delete an item
 response status - 204 no content
 
 
-### Order
+## Order
 
 #### GET
 URL - `/api/orders/` - Returns a list of all order
