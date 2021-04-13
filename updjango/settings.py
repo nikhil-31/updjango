@@ -15,9 +15,9 @@ DEBUG = env('DEBUG')
 SILK_ENABLED = env('SILK_ENABLED')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env('SECRET_KEY')
-ALLOWED_HOSTS = ["13.127.81.33",
-                 "127.0.0.1",
-                 "116.203.137.67", ]
+ALLOWED_HOSTS = ["127.0.0.1",
+                 "localhost",
+                 ""]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
