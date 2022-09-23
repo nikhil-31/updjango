@@ -39,7 +39,7 @@ packaging==20.9
 pbr==5.4.4
 pep8==1.7.1
 pluggy==0.13.1
-protobuf==3.6.1
+protobuf==3.18.3
 psutil==5.7.0
 py==1.10.0
 pycodestyle==2.5.0
